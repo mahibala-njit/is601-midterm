@@ -14,10 +14,6 @@ from calculator.calculations import Calculations
 from calculator.calculation import Calculation
 from calculator.operations import add
 
-def setup_method():
-    """Setup method to clear the history before each test."""
-    Calculations.clear_history()
-
 def test_get_last_calculation_empty():
     """
     Test case for retrieving the last calculation when the history is empty.
