@@ -68,4 +68,10 @@ def test_calculation_with_zero(a, b, operation, expected):
     """
     calc = Calculation(a, b, operation)
     assert calc.perform() == expected
-    
+
+def test_invalid_operator():
+    """Test that an invalid operator raises an exception."""
+    # Pass an invalid operator (None) to trigger an exception
+    with pytest.raises(TypeError):
+        calc = Calculation(Decimal('10'), Decimal('9'), None)
+        calc.perform()
