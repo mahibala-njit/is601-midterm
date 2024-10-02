@@ -26,6 +26,6 @@ class Calculations:
         return cls.history
 
     @classmethod
-    def clear_history(cls):
+    def clear_history(cls): 
         """Clears the calculation history"""
         cls.history.clear()

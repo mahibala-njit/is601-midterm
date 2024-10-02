@@ -27,11 +27,11 @@ def generate_test_data(num_records):
         
         try:
             if operation_func == divide and b == Decimal('0'):
-                expected = "ZeroDivisionError"
+                expected = "Cannot divide by zero."
             else:
                 expected = operation_func(a, b)
         except ZeroDivisionError:
-            expected = "ZeroDivisionError"
+            expected = "Cannot divide by zero."
         
         yield a, b, operation_name, operation_func, expected
 
