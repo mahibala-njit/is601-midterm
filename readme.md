@@ -41,7 +41,14 @@ pytest --pylint --cov
 pytest --pylint --cov --cov-report=xml --cov-report=term-missing
 ```
 ## Testing results:
+1. pytest --num_records=10
 
+![image](https://github.com/user-attachments/assets/486452e1-4d7c-4b05-8c48-4db4da1bed60)
+
+2. pytest --pylint --cov
+![image](https://github.com/user-attachments/assets/17ec2ef8-9d14-4f8b-b3bc-f7b4d8779528)
+
+3. pytest --pylint --cov --cov-report=xml --cov-report=term-missing
 ![image](https://github.com/user-attachments/assets/d3b61e03-b8ca-4c4e-a289-6c5c3a1b1975)
 
 
