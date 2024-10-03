@@ -137,6 +137,7 @@ def test_divide_by_zero_in_main(monkeypatch, capsys):
     main()  # Call main() without expecting SystemExit
     captured = capsys.readouterr()
     assert "Cannot divide by zero" in captured.out.strip()
+    assert "An error occurred: Cannot divide by zero" == captured.out.strip()
 
 def test_invalid_input_in_main(monkeypatch, capsys):
     """
@@ -153,3 +154,25 @@ def test_invalid_input_in_main(monkeypatch, capsys):
     main()  # Call main() without expecting SystemExit
     captured = capsys.readouterr()
     assert "Invalid number input" in captured.out.strip()
+
+def test_valid_operations(monkeypatch, capsys):
+    """Test valid operations through command-line arguments."""
+    operations = [
+        ('5', '3', 'add', "The result of 5 add 3 is equal to 8"),
+        ('10', '5', 'subtract', "The result of 10 subtract 5 is equal to 5"),
+        ('3', '7', 'multiply', "The result of 3 multiply 7 is equal to 21"),
+        ('20', '4', 'divide', "The result of 20 divide 4 is equal to 5"),
+    ]
+    
+    for a, b, operation, expected in operations:
+        monkeypatch.setattr(sys, 'argv', ['main.py', a, b, operation])
+        main()  # Call main() which internally calls calculate_and_print
+        captured = capsys.readouterr()
+        assert expected in captured.out.strip()
+
+def test_main_valid_arguments(monkeypatch, capsys):
+    """Test main function with valid arguments to ensure expected output."""
+    monkeypatch.setattr(sys, 'argv', ['main.py', '8', '2', 'subtract'])
+    main()  # Call the main function to trigger the calculation
+    captured = capsys.readouterr()
+    assert "The result of 8 subtract 2 is equal to 6" in captured.out.strip()

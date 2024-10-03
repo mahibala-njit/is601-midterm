@@ -20,8 +20,6 @@ def calculate_and_print(a, b, operation_name):
             print(f"Unknown operation: {operation_name}")
     except InvalidOperation:
         print(f"Invalid number input: {a} or {b} is not a valid number.")
-    except ZeroDivisionError:
-        print("An error occurred: Cannot divide by zero")
     except Exception as e: # Catch-all for unexpected errors
         print(f"An error occurred: {e}")
 
