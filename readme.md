@@ -27,11 +27,12 @@ pip3 install -r requirments.txt
 ## Testing 
 This project includes extensive unit tests for each feature and operation. Testing is done using the pytest framework, and code linting is handled by pylint to ensure code quality.
 
-The project has been fully tested, with 99% code coverage.
+The project has been fully tested.
 
 ```bash
 pytest --num_records=100
 pytest --pylint --cov
+pytest --pylint --cov --cov-report=xml --cov-report=term-missing
 ```
-## Test Results 
-![image](https://github.com/user-attachments/assets/faf0b070-9081-4d60-bab7-2610f561f1c6)
+
+
