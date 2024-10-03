@@ -27,7 +27,7 @@ This project is a simple calculator implemented in Python that performs basic ar
 1. Clone
 2. Install the requirements
 ```bash
-pip3 install -r requirments.txt
+pip3 install -r requirements.txt
 ```
 
 ## Testing 
