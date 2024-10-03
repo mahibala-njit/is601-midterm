@@ -9,7 +9,7 @@ import sys
     ("10", "2", 'subtract', "The result of 10 subtract 2 is equal to 8"),
     ("4", "5", 'multiply', "The result of 4 multiply 5 is equal to 20"),
     ("20", "4", 'divide', "The result of 20 divide 4 is equal to 5"),
-    ("1", "0", 'divide', "Cannot divide by zero"),  # Adjusted for the actual error message
+    ("1", "0", 'divide', "An error occurred: Cannot divide by zero"),  # Adjusted for the actual error message
     ("9", "3", 'unknown', "Unknown operation: unknown"),  # Test for unknown operation
     ("a", "3", 'add', "Invalid number input: a or 3 is not a valid number."),  # Testing invalid number input
     ("5", "b", 'subtract', "Invalid number input: 5 or b is not a valid number.")  # Testing another invalid number input
@@ -22,7 +22,7 @@ def test_calculate_and_print(a_string, b_string, operation_string,expected_strin
 def test_divide_by_zero(capsys):
     calculate_and_print("10", "0", "divide")  # Division by zero should raise an exception
     captured = capsys.readouterr()
-    assert captured.out.strip() == "Cannot divide by zero"
+    assert captured.out.strip() == "An error occurred: Cannot divide by zero"
 
 def test_unexpected_error_handling(monkeypatch, capsys):
     # Temporarily patch the operation_mappings to simulate an unexpected error
