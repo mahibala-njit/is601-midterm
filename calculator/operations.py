@@ -18,5 +18,5 @@ def divide(a: Decimal, b: Decimal) -> Decimal:
     if the second number is zero"""
     
     if b == 0:
-        raise ZeroDivisionError("Cannot divide by zero.")
+        raise ZeroDivisionError("Cannot divide by zero")
     return a / b

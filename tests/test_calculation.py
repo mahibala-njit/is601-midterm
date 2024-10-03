@@ -58,5 +58,5 @@ def test_divide_by_zero():
     correctly raises a ValueError, as dividing by zero is mathematically undefined and should be handled as an error.
     """
     calc = Calculation(Decimal('10'), Decimal('0'), divide)  # Create a Calculation instance with a zero divisor.
-    with pytest.raises(ZeroDivisionError, match="Cannot divide by zero"):  
+    with pytest.raises(ZeroDivisionError, match = "Cannot divide by zero"):  
         calc.perform()  # Attempt to perform the calculation, which should trigger the ValueError.
