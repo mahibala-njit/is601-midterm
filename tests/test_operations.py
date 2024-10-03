@@ -1,7 +1,18 @@
-import pytest
+"""
+This module contains unit tests for the calculator operations.
+
+It includes tests for various arithmetic operations using the Calculation class,
+as well as specific tests for edge cases such as division by zero.
+
+Tests:
+- Various arithmetic operations (addition, subtraction, multiplication, division).
+- Handling of division by zero scenarios.
+"""
+
 from decimal import Decimal
+import pytest
 from calculator.calculation import Calculation
-from calculator.operations import add, subtract, multiply, divide
+from calculator.operations import divide
 
 
 def test_operation(a, b, operation, expected):
