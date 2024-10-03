@@ -16,6 +16,12 @@ This project is a simple calculator implemented in Python that performs basic ar
 - Clear the calculation history
 - Uses `Decimal` for high-precision arithmetic
 
+## Addtional Features
+
+- Added the "faker" libary
+- Added a new command to pytest to generate  N number of records "tests/conftest.py"
+- Added a main.py file to serve as the entry point
+
 ## Install Instructions
 
 1. Clone
@@ -34,5 +40,7 @@ pytest --num_records=100
 pytest --pylint --cov
 pytest --pylint --cov --cov-report=xml --cov-report=term-missing
 ```
+pytest results:
+![image](https://github.com/user-attachments/assets/d3b61e03-b8ca-4c4e-a289-6c5c3a1b1975)
 
 
