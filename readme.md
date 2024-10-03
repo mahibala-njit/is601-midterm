@@ -1,4 +1,4 @@
-# Homework 3
+# Homework 4 - Generate tests using Faker
 
 # Calculator Project
 
@@ -24,13 +24,12 @@ This project is a simple calculator implemented in Python that performs basic ar
 pip3 install -r requirments.txt
 ```
 
-## Testing
+## Testing 
 This project includes extensive unit tests for each feature and operation. Testing is done using the pytest framework, and code linting is handled by pylint to ensure code quality.
 
-The project has been fully tested, with 100% code coverage.
+The project has been fully tested, with 99% code coverage.
 
 ```bash
-pytest
-pytest --pylint
+pytest --num_records=100
 pytest --pylint --cov
 ```
