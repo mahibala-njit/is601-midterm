@@ -10,6 +10,9 @@ from calculator.plugins.multiply import MultiplyCommand
 from calculator.plugins.divide import DivideCommand
 from calculator.plugins.menu import MenuCommand
 
+# Import main at the top level
+from main import main
+
 def setup_command_handler():
     """Set up the CommandHandler with available commands."""
     command_handler = CommandHandler()
@@ -66,8 +69,7 @@ def test_menu_command():
 def test_main_repl(mock_input):
     """Test the main REPL for valid commands."""
     with patch('builtins.print') as mock_print:
-        from main import main  # Move import to the top level of the function
-        main()
+        main()  # Call the main function directly here
         mock_print.assert_any_call("Welcome to the Calculator REPL!")
         mock_print.assert_any_call("Type commands like: add(1, 2), subtract(3, 1), etc.")
         mock_print.assert_any_call("Result: 2")  # Result of subtract(5, 3)
@@ -84,8 +86,7 @@ def test_main_repl(mock_input):
 def test_main_repl_with_invalid_command(mock_input):
     """Test the main REPL with an invalid command."""
     with patch('builtins.print') as mock_print:
-        from main import main  # Move import to the top level of the function
-        main()
+        main()  # Call the main function directly here
         
         # Check for valid command execution
         mock_print.assert_any_call("Result: 2")  # Result of subtract(5, 3)
@@ -100,8 +101,7 @@ def test_main_repl_with_invalid_command(mock_input):
 def test_main_repl_with_menu_command(mock_input):
     """Test the main REPL with the menu command."""
     with patch('builtins.print') as mock_print:
-        from main import main  # Move import to the top level of the function
-        main()
+        main()  # Call the main function directly here
 
         # Check that the menu command was called
         mock_print.assert_any_call("Available commands: add, subtract, multiply, divide, menu, exit")
@@ -113,8 +113,7 @@ def test_main_repl_with_menu_command(mock_input):
 def test_main_repl_with_divide_by_zero(mock_input):
     """Test the main REPL for handling division by zero."""
     with patch('builtins.print') as mock_print:
-        from main import main  # Move import to the top level of the function
-        main()
+        main()  # Call the main function directly here
 
         # Check error handling for division by zero
         mock_print.assert_any_call("Invalid input. Please enter valid numbers.")
@@ -124,8 +123,7 @@ def test_main_repl_with_divide_by_zero(mock_input):
 def test_main_repl_valid_commands(mock_input):
     """Test the main REPL with valid commands."""
     with patch('builtins.print') as mock_print:
-        from main import main  # Move import to the top level of the function
-        main()
+        main()  # Call the main function directly here
 
         # Check that the add command was executed
         mock_print.assert_any_call("Result: 3")  # Result of add(1, 2)
@@ -141,8 +139,7 @@ def test_main_repl_valid_commands(mock_input):
 def test_main_repl_with_invalid_command_format(mock_input):
     """Test the main REPL with an invalid command format."""
     with patch('builtins.print') as mock_print:
-        from main import main  # Move import to the top level of the function
-        main()
+        main()  # Call the main function directly here
 
         # Check that the add command was executed
         mock_print.assert_any_call("Welcome to the Calculator REPL!")
