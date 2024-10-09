@@ -1,14 +1,18 @@
-import pytest
-from unittest.mock import MagicMock
+"""Unit tests for the PluginLoader class in the calculator.plugins module."""
+
+from unittest.mock import MagicMock  # Standard library import
+import pytest  # Third-party import
 from calculator.commands import CommandHandler
 from calculator.plugins import PluginLoader
 
 # Mock command classes
 class ValidCommand:
-    pass
+    """A valid command for testing purposes."""
+    # No methods or properties; empty class
 
 class InvalidCommand:
-    pass
+    """An invalid command for testing purposes."""
+    # No methods or properties; empty class
 
 @pytest.fixture
 def command_handler():
@@ -19,7 +23,6 @@ def command_handler():
 def plugin_loader(command_handler):
     """Create a plugin loader with a mock command handler."""
     return PluginLoader(command_handler)
-
 
 def test_load_invalid_plugins(plugin_loader, monkeypatch):
     """Test that invalid plugins are ignored."""
