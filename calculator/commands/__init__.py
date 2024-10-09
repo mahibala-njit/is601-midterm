@@ -19,5 +19,9 @@ class CommandHandler:
     def execute_command(self, name, *args):
         if name not in self.commands:
             raise KeyError(f"No such command: {name}")
-        command = self.commands[name](*args)
-        return command.execute()  # Return the result from the command
+        
+        # Instantiate the command class with the provided arguments
+        command_class = self.commands[name]
+        command_instance = command_class(*args)  # Pass args to the command's constructor
+        return command_instance.execute()  # Return the result from the command
+

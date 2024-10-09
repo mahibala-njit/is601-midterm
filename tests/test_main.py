@@ -4,11 +4,11 @@ from decimal import Decimal, InvalidOperation
 from unittest.mock import patch
 import pytest
 from calculator.commands import CommandHandler
-from calculator.commands.add import AddCommand
-from calculator.commands.subtract import SubtractCommand
-from calculator.commands.multiply import MultiplyCommand
-from calculator.commands.divide import DivideCommand
-from calculator.commands.menu import MenuCommand
+from calculator.plugins.add import AddCommand
+from calculator.plugins.subtract import SubtractCommand
+from calculator.plugins.multiply import MultiplyCommand
+from calculator.plugins.divide import DivideCommand
+from calculator.plugins.menu import MenuCommand
 
 def setup_command_handler():
     """Set up the CommandHandler with available commands."""
@@ -70,8 +70,8 @@ def test_main_repl(mock_input):
         main()
         mock_print.assert_any_call("Welcome to the Calculator REPL!")
         mock_print.assert_any_call("Type commands like: add(1, 2), subtract(3, 1), etc.")
-        mock_print.assert_any_call("Result: 3")  
-        mock_print.assert_any_call("Result: 2") 
+        mock_print.assert_any_call("Result: 2")  # Result of subtract(5, 3)
+        mock_print.assert_any_call("Result: 3")  # Result of add(1, 2)
         mock_print.assert_any_call("Available commands: add, subtract, multiply, divide, menu, exit")
 
 @patch('builtins.input', side_effect=[
@@ -88,7 +88,7 @@ def test_main_repl_with_invalid_command(mock_input):
         main()
         
         # Check for valid command execution
-        mock_print.assert_any_call("Result: 3")  # Result of subtract(5, 3)
+        mock_print.assert_any_call("Result: 2")  # Result of subtract(5, 3)
 
         # Check for invalid command handling
         mock_print.assert_any_call("No such command: invalid_command. Type 'menu' for available commands.")
