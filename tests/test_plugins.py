@@ -1,7 +1,7 @@
 """Unit tests for the PluginLoader class in the calculator.plugins module."""
 
-from unittest.mock import MagicMock  # Standard library import
-import pytest  # Third-party import
+from unittest.mock import MagicMock 
+import pytest 
 from calculator.commands import CommandHandler
 from calculator.plugins import PluginLoader
 
