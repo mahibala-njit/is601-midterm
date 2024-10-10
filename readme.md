@@ -1,8 +1,10 @@
-# Homework 4 - Generate tests using Faker
+# Homework 5 - Command Pattern and Plugin architecture
 
 # Calculator Project
 
 This project is a simple calculator implemented in Python that performs basic arithmetic operations: addition, subtraction, multiplication, and division. The calculator is designed using object-oriented principles and showcases various design patterns, including class methods, static methods, and a calculation history feature.
+
+Additionally implements command pattern and plugin architecture
 
 ## Features
 
@@ -18,9 +20,8 @@ This project is a simple calculator implemented in Python that performs basic ar
 
 ## Addtional Features
 
-- Added the "faker" libary
-- Added a new command to pytest to generate  N number of records "tests/conftest.py"
-- Added a main.py file to serve as the entry point
+- Implemented Command Pattern along with Menu command
+- Implemented Plugin architecture to dynamically load the commands
 
 ## Install Instructions
 
@@ -29,6 +30,13 @@ This project is a simple calculator implemented in Python that performs basic ar
 ```bash
 pip3 install -r requirements.txt
 ```
+
+# Running the application
+
+```bash
+python main.py
+```
+![alt text](image-1.png)
 
 ## Testing 
 This project includes extensive unit tests for each feature and operation. Testing is done using the pytest framework, and code linting is handled by pylint to ensure code quality.
@@ -43,12 +51,14 @@ pytest --pylint --cov --cov-report=xml --cov-report=term-missing
 ## Testing results:
 1. pytest --num_records=10
 
-![image](https://github.com/user-attachments/assets/486452e1-4d7c-4b05-8c48-4db4da1bed60)
+![alt text](image-2.png)
 
 2. pytest --pylint --cov
-![image](https://github.com/user-attachments/assets/17ec2ef8-9d14-4f8b-b3bc-f7b4d8779528)
+
+![alt text](image-3.png)
 
 3. pytest --pylint --cov --cov-report=xml --cov-report=term-missing
-![image](https://github.com/user-attachments/assets/d3b61e03-b8ca-4c4e-a289-6c5c3a1b1975)
+
+![alt text](image.png)
 
 

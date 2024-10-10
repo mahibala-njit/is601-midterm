@@ -1,178 +1,153 @@
-"""
-This module contains unit tests for the calculator functionality.
+"""Unit tests for the main calculator module and its REPL functionality."""
 
-It includes tests for various operations (addition, subtraction, multiplication, division)
-and checks for proper error handling in cases such as division by zero and invalid inputs.
-"""
-
-import sys
+from decimal import Decimal, InvalidOperation
+from unittest.mock import patch
 import pytest
-from main import calculate_and_print  # Ensure this import matches your project structure
+from calculator.commands import CommandHandler
+from calculator.plugins.add import AddCommand
+from calculator.plugins.subtract import SubtractCommand
+from calculator.plugins.multiply import MultiplyCommand
+from calculator.plugins.divide import DivideCommand
+from calculator.plugins.menu import MenuCommand
+
+# Import main at the top level
 from main import main
 
+def setup_command_handler():
+    """Set up the CommandHandler with available commands."""
+    command_handler = CommandHandler()
+    command_handler.register_command("add", AddCommand)
+    command_handler.register_command("subtract", SubtractCommand)
+    command_handler.register_command("multiply", MultiplyCommand)
+    command_handler.register_command("divide", DivideCommand)
+    command_handler.register_command("menu", MenuCommand)
+    return command_handler
 
-# Parameterize the test function to cover different operations and scenarios, including errors
-@pytest.mark.parametrize("a_string, b_string, operation_string, expected_string", [
-    ("5", "3", 'add', "The result of 5 add 3 is equal to 8"),
-    ("10", "2", 'subtract', "The result of 10 subtract 2 is equal to 8"),
-    ("4", "5", 'multiply', "The result of 4 multiply 5 is equal to 20"),
-    ("20", "4", 'divide', "The result of 20 divide 4 is equal to 5"),
-    ("1", "0", 'divide', "An error occurred: Cannot divide by zero"),  # Adjusted for the actual error message
-    ("9", "3", 'unknown', "Unknown operation: unknown"),  # Test for unknown operation
-    ("a", "3", 'add', "Invalid number input: a or 3 is not a valid number."),  # Testing invalid number input
-    ("5", "b", 'subtract', "Invalid number input: 5 or b is not a valid number.")  # Testing another invalid number input
+def test_add_command():
+    """Test the add command for correct output."""
+    command_handler = setup_command_handler()
+    result = command_handler.execute_command("add", Decimal('1.5'), Decimal('2.5'))
+    assert result == Decimal('4.0')
+
+def test_subtract_command():
+    """Test the subtract command for correct output."""
+    command_handler = setup_command_handler()
+    result = command_handler.execute_command("subtract", Decimal('5.5'), Decimal('2.0'))
+    assert result == Decimal('3.5')
+
+def test_multiply_command():
+    """Test the multiply command for correct output."""
+    command_handler = setup_command_handler()
+    result = command_handler.execute_command("multiply", Decimal('2.0'), Decimal('3.0'))
+    assert result == Decimal('6.0')
+
+def test_divide_command():
+    """Test the divide command for correct output."""
+    command_handler = setup_command_handler()
+    result = command_handler.execute_command("divide", Decimal('10.0'), Decimal('2.0'))
+    assert result == Decimal('5.0')
+
+def test_divide_by_zero():
+    """Test that dividing by zero raises an InvalidOperation."""
+    command_handler = setup_command_handler()
+    with pytest.raises(InvalidOperation):
+        command_handler.execute_command("divide", Decimal('10.0'), Decimal('0.0'))
+
+def test_invalid_command():
+    """Test that an invalid command raises a KeyError."""
+    command_handler = setup_command_handler()
+    with pytest.raises(KeyError):
+        command_handler.execute_command("invalid_command")
+
+def test_menu_command():
+    """Test that the menu command executes successfully."""
+    command_handler = setup_command_handler()
+    result = command_handler.execute_command("menu")
+    assert result is not None  # Check the expected return value of the menu
+
+@patch('builtins.input', side_effect=["add(1, 2)", "subtract(5, 3)", "menu", "exit"])
+def test_main_repl(mock_input):
+    """Test the main REPL for valid commands."""
+    with patch('builtins.print') as mock_print:
+        main()  # Call the main function directly here
+        mock_print.assert_any_call("Welcome to the Calculator REPL!")
+        mock_print.assert_any_call("Type commands like: add(1, 2), subtract(3, 1), etc.")
+        mock_print.assert_any_call("Result: 2")  # Result of subtract(5, 3)
+        mock_print.assert_any_call("Result: 3")  # Result of add(1, 2)
+        mock_print.assert_any_call("Available commands: add, subtract, multiply, divide, menu, exit")
+
+@patch('builtins.input', side_effect=[
+    "add(1, 2)",
+    "invalid_command",
+    "menu",
+    "subtract(5, 3)",
+    "exit"
 ])
-def test_calculate_and_print(a_string, b_string, operation_string, expected_string, capsys):
-    """
-    Test the calculate_and_print function for various operations and error handling.
+def test_main_repl_with_invalid_command(mock_input):
+    """Test the main REPL with an invalid command."""
+    with patch('builtins.print') as mock_print:
+        main()  # Call the main function directly here
+        
+        # Check for valid command execution
+        mock_print.assert_any_call("Result: 2")  # Result of subtract(5, 3)
 
-    Parameters:
-        a_string (str): First number as a string.
-        b_string (str): Second number as a string.
-        operation_string (str): The operation to perform (add, subtract, etc.).
-        expected_string (str): The expected output string.
-        capsys (pytest fixture): Used to capture standard output.
-    """
-    calculate_and_print(a_string, b_string, operation_string)
-    captured = capsys.readouterr()
-    assert captured.out.strip() == expected_string
+        # Check for invalid command handling
+        mock_print.assert_any_call("No such command: invalid_command. Type 'menu' for available commands.")
+        
+        # Check for valid menu command
+        mock_print.assert_any_call("Available commands: add, subtract, multiply, divide, menu, exit")
 
-def test_divide_by_zero(capsys):
-    """
-    Test the calculate_and_print function for division by zero.
+@patch('builtins.input', side_effect=["menu", "exit"])
+def test_main_repl_with_menu_command(mock_input):
+    """Test the main REPL with the menu command."""
+    with patch('builtins.print') as mock_print:
+        main()  # Call the main function directly here
 
-    This should raise an appropriate error message.
-    
-    Parameters:
-        capsys (pytest fixture): Used to capture standard output.
-    """
-    calculate_and_print("10", "0", "divide")  # Division by zero should raise an exception
-    captured = capsys.readouterr()
-    assert captured.out.strip() == "An error occurred: Cannot divide by zero"
+        # Check that the menu command was called
+        mock_print.assert_any_call("Available commands: add, subtract, multiply, divide, menu, exit")
+        
+        # Check that exit was called
+        mock_print.assert_any_call("Exiting the calculator.")
 
-def test_unexpected_error_handling(monkeypatch, capsys):
-    """
-    Test handling of unexpected errors in the calculate_and_print function.
+@patch('builtins.input', side_effect=["divide(1, 0)", "exit"])
+def test_main_repl_with_divide_by_zero(mock_input):
+    """Test the main REPL for handling division by zero."""
+    with patch('builtins.print') as mock_print:
+        main()  # Call the main function directly here
 
-    This simulates a faulty operation to ensure error messages are correctly handled.
+        # Check error handling for division by zero
+        mock_print.assert_any_call("Invalid input. Please enter valid numbers.")
+        mock_print.assert_any_call("Exiting the calculator.")
 
-    Parameters:
-        monkeypatch (pytest fixture): Used to modify the Calculator's operation temporarily.
-        capsys (pytest fixture): Used to capture standard output.
-    """
-    # Temporarily patch the operation_mappings to simulate an unexpected error
-    def faulty_operation(a, b):
-        raise ValueError("Unexpected error occurred")
-    
-    monkeypatch.setattr('calculator.Calculator.add', faulty_operation)
-    
-    calculate_and_print("5", "3", "add")  # This should now raise a ValueError
-    captured = capsys.readouterr()
-    assert captured.out.strip() == "An error occurred: Unexpected error occurred"
+@patch('builtins.input', side_effect=["add(1, 2)", "exit"])
+def test_main_repl_valid_commands(mock_input):
+    """Test the main REPL with valid commands."""
+    with patch('builtins.print') as mock_print:
+        main()  # Call the main function directly here
 
-def test_main_correct_args(monkeypatch, capsys):
-    """
-    Test the main function with correct command-line arguments.
+        # Check that the add command was executed
+        mock_print.assert_any_call("Result: 3")  # Result of add(1, 2)
 
-    This ensures that the expected output is produced when valid arguments are provided.
+        # Check that exit was called
+        mock_print.assert_any_call("Exiting the calculator.")
 
-    Parameters:
-        monkeypatch (pytest fixture): Used to simulate command-line arguments.
-        capsys (pytest fixture): Used to capture standard output.
-    """
-    # Simulate passing correct arguments to the command line
-    monkeypatch.setattr('sys.argv', ['calculator_main.py', '5', '3', 'add'])
-    main()
-    captured = capsys.readouterr()
-    assert "The result of 5 add 3 is equal to 8" in captured.out.strip()
+@patch('builtins.input', side_effect=[
+    "add(1, 2)",  # Valid command
+    "invalid_command_format",  # Invalid command format
+    "exit"
+])
+def test_main_repl_with_invalid_command_format(mock_input):
+    """Test the main REPL with an invalid command format."""
+    with patch('builtins.print') as mock_print:
+        main()  # Call the main function directly here
 
-def test_invalid_operation_handling(capsys):
-    """
-    Test the calculate_and_print function for handling invalid operations.
+        # Check that the add command was executed
+        mock_print.assert_any_call("Welcome to the Calculator REPL!")
+        mock_print.assert_any_call("Type commands like: add(1, 2), subtract(3, 1), etc.")
+        mock_print.assert_any_call("Result: 3")  # Result of add(1, 2)
 
-    This verifies that an appropriate error message is returned for unknown operations.
+        # Check that exit was called
+        mock_print.assert_any_call("Exiting the calculator.")
 
-    Parameters:
-        capsys (pytest fixture): Used to capture standard output.
-    """
-    calculate_and_print("5", "3", "invalid_op")
-    captured = capsys.readouterr()
-    assert captured.out.strip() == "Unknown operation: invalid_op"
-
-def test_main_incorrect_args(monkeypatch, capsys):
-    """
-    Test the main function with incorrect command-line arguments.
-
-    This checks that the script exits with an appropriate usage message when insufficient arguments are provided.
-
-    Parameters:
-        monkeypatch (pytest fixture): Used to simulate command-line arguments.
-        capsys (pytest fixture): Used to capture standard output.
-    """
-    # Mock sys.argv with incorrect arguments (less than 4)
-    monkeypatch.setattr(sys, 'argv', ['main.py', '5'])
-
-    # Call the main function
-    with pytest.raises(SystemExit):  # Expecting the script to exit with sys.exit(1)
-        main()
-    
-    # Capture the output printed to the console
-    captured = capsys.readouterr()
-    
-    # Assert that the correct usage message is printed when incorrect args are provided
-    assert captured.out.strip() == "Usage: python calculator_main.py <number1> <number2> <operation>"
-
-def test_divide_by_zero_in_main(monkeypatch, capsys):
-    """
-    Test the main function for division by zero.
-
-    This ensures that the appropriate error message is displayed when attempting to divide by zero.
-
-    Parameters:
-        monkeypatch (pytest fixture): Used to simulate command-line arguments.
-        capsys (pytest fixture): Used to capture standard output.
-    """
-    # Mock sys.argv for division by zero
-    monkeypatch.setattr(sys, 'argv', ['main.py', '5', '0', 'divide'])
-    main()  # Call main() without expecting SystemExit
-    captured = capsys.readouterr()
-    assert "Cannot divide by zero" in captured.out.strip()
-    assert "An error occurred: Cannot divide by zero" == captured.out.strip()
-
-def test_invalid_input_in_main(monkeypatch, capsys):
-    """
-    Test the main function for invalid string input.
-
-    This checks that the appropriate error message is displayed when non-numeric input is provided.
-
-    Parameters:
-        monkeypatch (pytest fixture): Used to simulate command-line arguments.
-        capsys (pytest fixture): Used to capture standard output.
-    """
-    # Mock sys.argv for invalid string input
-    monkeypatch.setattr(sys, 'argv', ['main.py', 'abc', '5', 'add'])
-    main()  # Call main() without expecting SystemExit
-    captured = capsys.readouterr()
-    assert "Invalid number input" in captured.out.strip()
-
-def test_valid_operations(monkeypatch, capsys):
-    """Test valid operations through command-line arguments."""
-    operations = [
-        ('5', '3', 'add', "The result of 5 add 3 is equal to 8"),
-        ('10', '5', 'subtract', "The result of 10 subtract 5 is equal to 5"),
-        ('3', '7', 'multiply', "The result of 3 multiply 7 is equal to 21"),
-        ('20', '4', 'divide', "The result of 20 divide 4 is equal to 5"),
-    ]
-    
-    for a, b, operation, expected in operations:
-        monkeypatch.setattr(sys, 'argv', ['main.py', a, b, operation])
-        main()  # Call main() which internally calls calculate_and_print
-        captured = capsys.readouterr()
-        assert expected in captured.out.strip()
-
-def test_main_valid_arguments(monkeypatch, capsys):
-    """Test main function with valid arguments to ensure expected output."""
-    monkeypatch.setattr(sys, 'argv', ['main.py', '8', '2', 'subtract'])
-    main()  # Call the main function to trigger the calculation
-    captured = capsys.readouterr()
-    assert "The result of 8 subtract 2 is equal to 6" in captured.out.strip()
+if __name__ == "__main__":
+    pytest.main()
