@@ -1,5 +1,7 @@
 # main.py
-
+import sys
+import logging
+import logging.config
 import re
 from decimal import Decimal, InvalidOperation
 from calculator.commands import CommandHandler
@@ -9,7 +11,19 @@ from calculator.plugins.multiply import MultiplyCommand
 from calculator.plugins.divide import DivideCommand
 from calculator.plugins.menu import MenuCommand
 
+def setup_logging(config_file='logging.conf'):
+    """Set up logging configuration."""
+    logging.config.fileConfig(config_file)
+    logger = logging.getLogger(__name__)
+    logger.info("Logging is configured.")
+    return logger
+
 def main():
+
+    # Setup logging and get the logger
+    logger = setup_logging()
+    logger.info("Starting the calculator application.")
+
     command_handler = CommandHandler()
 
     # Register commands in a loop for better maintainability
@@ -24,6 +38,8 @@ def main():
     for command_name, command_class in command_classes.items():
         command_handler.register_command(command_name, command_class)
 
+    logger.info("Registered all commands.")
+
     print("Welcome to the Calculator REPL!")
     print("Type commands like: add(1, 2), subtract(3, 1), etc.")
     print("Type 'menu' to list available commands.")
@@ -32,6 +48,7 @@ def main():
     while True:
         user_input = input(">>> ").strip()
         if user_input.lower() == 'exit':
+            logger.info("Exiting the calculator.")
             print("Exiting the calculator.")
             break
 
@@ -51,13 +68,18 @@ def main():
                 # Convert arguments to Decimal only if there are any
                 decimal_args = list(map(Decimal, args)) if args else []
                 command_handler.execute_command(command_name, *decimal_args)  # Pass as arguments
+                logger.info(f"Executed command: {command_name} with arguments {decimal_args}")
             except InvalidOperation:
+                logger.error("Invalid input. Non-numeric values entered.")
                 print("Invalid input. Please enter valid numbers.")
             except KeyError:
+                logger.error(f"Unknown command: {command_name}")
                 print(f"No such command: {command_name}. Type 'menu' for available commands.")
             except Exception as e:
+                logger.exception(f"An error occurred: {e}")
                 print(f"An error occurred: {e}")
         else:
+            logger.warning(f"Invalid command format: {user_input}")
             print("Invalid command format")
 
 if __name__ == '__main__':
