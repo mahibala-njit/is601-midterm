@@ -93,7 +93,6 @@ def main():
                 # Convert arguments to Decimal only if there are any
                 decimal_args = list(map(Decimal, args)) if args else []
                 command_handler.execute_command(command_name, *decimal_args)  # Pass as arguments
-                logger.info(f"Executed command: {command_name} with arguments {decimal_args}")
             except InvalidOperation:
                 logger.error("Invalid input. Non-numeric values entered.")
                 print("Invalid input. Please enter valid numbers.")
