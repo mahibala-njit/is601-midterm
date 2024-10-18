@@ -1,4 +1,4 @@
-# Homework 5 - Command Pattern and Plugin architecture
+# Homework 6 - Logging, environment variables and DevOps (Github actions)
 
 # Calculator Project
 
@@ -22,6 +22,8 @@ Additionally implements command pattern and plugin architecture
 
 - Implemented Command Pattern along with Menu command
 - Implemented Plugin architecture to dynamically load the commands
+- Implemented logging and have used environment variables
+- Github actions configured (Continuous integration)
 
 ## Install Instructions
 
@@ -36,7 +38,7 @@ pip3 install -r requirements.txt
 ```bash
 python main.py
 ```
-![alt text](image-1.png)
+![alt text](image.png)
 
 ## Testing 
 This project includes extensive unit tests for each feature and operation. Testing is done using the pytest framework, and code linting is handled by pylint to ensure code quality.
@@ -50,15 +52,24 @@ pytest --pylint --cov --cov-report=xml --cov-report=term-missing
 ```
 ## Testing results:
 1. pytest --num_records=10
-
-![alt text](image-2.png)
+![alt text](image-1.png)
 
 2. pytest --pylint --cov
-
-![alt text](image-3.png)
+![alt text](image-2.png)
 
 3. pytest --pylint --cov --cov-report=xml --cov-report=term-missing
+![alt text](image-3.png)
 
-![alt text](image.png)
+# Github actions Test
 
+1. On pull request to main branch, github actions got triggered and is in progress
 
+![alt text](image-4.png)
+
+2. Github actions complete
+
+![alt text](image-5.png)
+
+3. View Github actions workflow and results
+
+![alt text](image-6.png)
