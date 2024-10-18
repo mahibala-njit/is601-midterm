@@ -1,4 +1,3 @@
-# main.py
 import sys
 import logging
 import logging.config
@@ -10,15 +9,41 @@ from calculator.plugins.subtract import SubtractCommand
 from calculator.plugins.multiply import MultiplyCommand
 from calculator.plugins.divide import DivideCommand
 from calculator.plugins.menu import MenuCommand
+from dotenv import load_dotenv
+import os
 
-def setup_logging(config_file='logging.conf'):
-    """Set up logging configuration."""
-    logging.config.fileConfig(config_file)
+def setup_logging():
+    """Set up logging configuration based on environment."""
+    environment = os.getenv('ENVIRONMENT', 'production')
+
     logger = logging.getLogger(__name__)
-    logger.info("Logging is configured.")
+
+    if environment == 'development':
+        # Log to a file in the 'logs' directory when in development mode
+        log_file = os.path.join('logs', 'calculator.log')
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(log_file),
+                logging.StreamHandler(sys.stdout)  # Also output to console
+            ]
+        )
+        logger.info(f"Logging set to file: {log_file} and console (development).")
+    else:
+        # Use StreamHandler (console output) for other environments
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[logging.StreamHandler(sys.stdout)]
+        )
+        logger.info("Logging set to console (non-development).")
+
     return logger
 
 def main():
+    # Load environment variables from .env
+    load_dotenv()
 
     # Setup logging and get the logger
     logger = setup_logging()
