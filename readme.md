@@ -35,10 +35,19 @@ pip3 install -r requirements.txt
 
 # Running the application
 
+## Logs show up in the console as well as in app.log locally
+
 ```bash
 python main.py
 ```
+
+1. Console output
 ![alt text](image.png)
+
+2. app.log
+
+![alt text](image-7.png)
+
 
 ## Testing 
 This project includes extensive unit tests for each feature and operation. Testing is done using the pytest framework, and code linting is handled by pylint to ensure code quality.
