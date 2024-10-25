@@ -1,17 +1,21 @@
 import pandas as pd
 import logging
-from calculator.calculations import Calculations
 
 logger = logging.getLogger(__name__)
 
 class HistoryManager:
-    def __init__(self):
-        self.history_df = pd.DataFrame(columns=["operation", "a", "b", "result"])
-        logger.info("Initialized HistoryManager with empty DataFrame.")
+    _instance = None
+    
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(HistoryManager, cls).__new__(cls)
+            cls._instance.history_df = pd.DataFrame(columns=["operation", "a", "b", "result"])
+            logger.info("Initialized HistoryManager with empty DataFrame.")
+        return cls._instance
 
     def add_to_history(self, operation: str, a, b, result):
-        new_entry = {"operation": operation, "a": a, "b": b, "result": result}
-        self.history_df = self.history_df.append(new_entry, ignore_index=True)
+        new_entry = pd.DataFrame([{"operation": operation, "a": a, "b": b, "result": result}])
+        self.history_df = pd.concat([self.history_df, new_entry], ignore_index=True)
         logger.info("Added to history: %s", new_entry)
 
     def save_history(self, file_path: str):

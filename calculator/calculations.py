@@ -1,21 +1,28 @@
 from typing import List
 from calculator.calculation import Calculation
+from calculator.history_facade.history_manager import HistoryManager  # Import HistoryManager
 import logging
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)
 
 class Calculations:
-    """A class to manage a history of mathematical calculations. It allows adding 
-    calculations to the history, retrieving the last calculation, and clearing 
-    the history"""
-
+    """A class to manage a history of mathematical calculations."""
+    
     history: List[Calculation] = []
+    history_manager = HistoryManager()  # Create an instance of HistoryManager
 
     @classmethod
     def add_calculation(cls, calculation: Calculation):
         """Add a new calculation to the history."""
         cls.history.append(calculation)
+        # Add the calculation to the HistoryManager
+        cls.history_manager.add_to_history(
+            operation=calculation.operation.__name__,
+            a=calculation.a,
+            b=calculation.b,
+            result=calculation.perform()  # Ensure perform() is called
+        )
         logger.info("Added calculation to history: %s", calculation)
 
     @classmethod
@@ -38,4 +45,5 @@ class Calculations:
     def clear_history(cls): 
         """Clears the calculation history."""
         cls.history.clear()
+        cls.history_manager.history_df = pd.DataFrame(columns=["operation", "a", "b", "result"])  # Reset the DataFrame
         logger.info("Cleared calculation history.")
