@@ -2,6 +2,7 @@ from typing import List
 from calculator.calculation import Calculation
 from calculator.history_facade.history_manager import HistoryManager  # Import HistoryManager
 import logging
+import pandas as pd
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)

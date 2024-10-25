@@ -15,14 +15,14 @@ from calculator.calculation import Calculation
 from calculator.operations import divide
 
 
-def test_operation(a, b, operation, expected):
+def test_operation( operation, expected, a, b):
     '''Testing various operations'''
-    calculation = Calculation.create(a, b, operation)
-    assert calculation.perform() == expected, f"{operation.__name__} operation failed"
+    calculation = Calculation.create( a, b, operation)
+    assert calculation.perform() == expected, f"{operation} operation failed"
 
 # Keeping the divide by zero test as is since it tests a specific case
 def test_divide_by_zero():
     '''Testing the divide by zero exception'''
     with pytest.raises(ValueError, match="Cannot divide by zero"):
-        calculation = Calculation(Decimal('10'), Decimal('0'), divide)
+        calculation = Calculation(divide,Decimal('10'), Decimal('0') )
         calculation.perform()
