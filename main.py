@@ -9,6 +9,10 @@ from calculator.plugins.subtract import SubtractCommand
 from calculator.plugins.multiply import MultiplyCommand
 from calculator.plugins.divide import DivideCommand
 from calculator.plugins.menu import MenuCommand
+from calculator.plugins.sin import SinCommand
+from calculator.plugins.cos import CosCommand
+from calculator.plugins.tan import TanCommand
+from calculator.plugins.sqrt import SqrtCommand
 from calculator.plugins.display_history import DisplayHistoryCommand
 from calculator.plugins.save_history import SaveHistoryCommand
 from calculator.plugins.load_history import LoadHistoryCommand
@@ -57,11 +61,15 @@ def main():
         "add": AddCommand,
         "subtract": SubtractCommand,
         "multiply": MultiplyCommand,
+        "sin": SinCommand,
+        "cos": CosCommand,
+        "tan": TanCommand,
+        "sqrt": SqrtCommand,
         "divide": DivideCommand,
         "menu": MenuCommand,
         "display_history": DisplayHistoryCommand,
         "save_history": SaveHistoryCommand,
-        "load_history": LoadHistoryCommand
+        "load_history": LoadHistoryCommand,
     }
 
     for command_name, command_class in command_classes.items():

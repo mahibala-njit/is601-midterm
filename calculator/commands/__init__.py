@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import logging
+from decimal import Decimal
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)
@@ -21,14 +22,18 @@ class CommandHandler:
         self.commands[command_name] = command_class  # Store class, not instance
         logger.info(f"Registered command: {command_name}")
 
-    def execute_command(self, name, *args):
-        if name not in self.commands:
-            logger.error(f"Attempted to execute unknown command: {name}")
-            raise KeyError(f"No such command: {name}")
-        
-        # Instantiate the command class with the provided arguments
-        command_class = self.commands[name]
-        command_instance = command_class(*args)  # Pass args to the command's constructor
-        result = command_instance.execute()  # Execute the command and get the result
-        logger.info(f"Executed command: {name} with arguments: {args}")
+    def execute_command(self, command_name: str, *args: Decimal):
+        command_class = self.commands.get(command_name)
+        if not command_class:
+            raise ValueError(f"Unknown command: {command_name}")
+
+        # Check if command requires arguments (like AddCommand) or not (like CosCommand)
+        if len(args) == 1 and command_name in ["cos", "sin", "tan", "sqrt"]:
+            command_instance = command_class()  # Instantiate unary command without arguments
+            result = command_instance.execute(args[0])  # Pass single argument to execute
+        else:
+            command_instance = command_class(*args)  # Instantiate binary command with arguments
+            result = command_instance.execute()
+
+        logger.info("Executed command: %s with arguments: %s", command_name, args)
         return result
