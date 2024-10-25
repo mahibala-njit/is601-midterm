@@ -4,11 +4,14 @@ import logging.config
 import re
 from decimal import Decimal, InvalidOperation
 from calculator.commands import CommandHandler
-from calculator.plugins.add import AddCommand  # Ensure correct import paths
+from calculator.plugins.add import AddCommand
 from calculator.plugins.subtract import SubtractCommand
 from calculator.plugins.multiply import MultiplyCommand
 from calculator.plugins.divide import DivideCommand
 from calculator.plugins.menu import MenuCommand
+from calculator.plugins.display_history import DisplayHistoryCommand
+from calculator.plugins.save_history import SaveHistoryCommand
+from calculator.plugins.load_history import LoadHistoryCommand
 from dotenv import load_dotenv
 import os
 
@@ -19,19 +22,17 @@ def setup_logging():
     logger = logging.getLogger(__name__)
 
     if environment == 'development':
-        # Log to a file in the 'logs' directory when in development mode
         log_file = os.path.join('logs', 'calculator.log')
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[
                 logging.FileHandler(log_file),
-                logging.StreamHandler(sys.stdout)  # Also output to console
+                logging.StreamHandler(sys.stdout)
             ]
         )
         logger.info(f"Logging set to file: {log_file} and console (development).")
     else:
-        # Use StreamHandler (console output) for other environments
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -58,6 +59,9 @@ def main():
         "multiply": MultiplyCommand,
         "divide": DivideCommand,
         "menu": MenuCommand,
+        "display_history": DisplayHistoryCommand,
+        "save_history": SaveHistoryCommand,
+        "load_history": LoadHistoryCommand
     }
 
     for command_name, command_class in command_classes.items():
@@ -77,22 +81,24 @@ def main():
             print("Exiting the calculator.")
             break
 
-        # Use regex to match the command and arguments, allowing for 'menu'
         match = re.match(r"(\w+)(?:\(([^)]*)\))?", user_input)
 
         if match:
             command_name = match.group(1)
-            args = match.group(2)  # Get the arguments if present
+            args = match.group(2)
 
             if args:
-                args = args.split(",")  # Split arguments by comma
+                args = args.split(",")
             else:
-                args = []  # No arguments for menu command
+                args = []
             
             try:
-                # Convert arguments to Decimal only if there are any
-                decimal_args = list(map(Decimal, args)) if args else []
-                command_handler.execute_command(command_name, *decimal_args)  # Pass as arguments
+                # Handle specific commands that may require string arguments
+                if command_name in ["save_history", "load_history"] and args:
+                    command_handler.execute_command(command_name, *args)
+                else:
+                    decimal_args = list(map(Decimal, args)) if args else []
+                    command_handler.execute_command(command_name, *decimal_args)
             except InvalidOperation:
                 logger.error("Invalid input. Non-numeric values entered.")
                 print("Invalid input. Please enter valid numbers.")
