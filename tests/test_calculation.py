@@ -29,15 +29,10 @@ def test_calculation_operations(operation, expected, a, b):
     assert calc.perform() == expected, f"Failed {operation} operation with {a} and {b}"  # Perform the operation and assert that the result matches the expected value.
 
 def test_calculation_repr():
-    """
-    Test the string representation (__repr__) of the Calculation class.
-    
-    This test verifies that the __repr__ method of a Calculation instance returns a string
-    that accurately represents the state of the Calculation object, including its operands and operation.
-    """
-    
-    calc = Calculation(Decimal('10'), Decimal('5'), add)  # Create a Calculation instance for testing.
-    expected_repr = "Calculation(10, 5, add)"  # Define the expected string representation.
+    """Test the string representation (__repr__) of the Calculation class."""
+    calc = Calculation(add, Decimal('10'), Decimal('5'))  # Create a Calculation instance for testing.
+    expected_repr = "Calculation(operation=add, a=10, b=5)"  # Expected string representation.
+    assert repr(calc) == expected_repr, f"__repr__ output '{repr(calc)}' does not match expected '{expected_repr}'"
     assert repr(calc) == expected_repr, "The __repr__ method output does not match the expected string."  
 
 def test_divide_by_zero():
@@ -47,6 +42,6 @@ def test_divide_by_zero():
     This test checks that attempting to perform a division operation with a zero divisor
     correctly raises a ValueError, as dividing by zero is mathematically undefined and should be handled as an error.
     """
-    calc = Calculation(Decimal('10'), Decimal('0'), divide)  # Create a Calculation instance with a zero divisor.
+    calc = Calculation(divide, Decimal('10'), Decimal('0'))  # Create a Calculation instance with a zero divisor.
     with pytest.raises(ValueError, match = "Cannot divide by zero"):  
-        calc.perform()  
+        calc.perform()

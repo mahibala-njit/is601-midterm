@@ -32,6 +32,12 @@ class Calculation:
         logger.info("Performed %s: %s = %s", self.operation.__name__, self, result)
         return result
 
+    #def __repr__(self):
+    #    """Returns a string representation of the Calculation object"""
+    #    logger.info(f"Calculation({self.a}, {self.b}, {self.operation})")
+    #    return f"Calculation({self.a}, {self.b}, {self.operation})"
+
     def __repr__(self):
         """Returns a string representation of the Calculation object"""
-        return f"Calculation({self.a}, {self.b}, {self.operation})"
+        operation_name = self.operation.__name__ if callable(self.operation) else str(self.operation)
+        return f"Calculation(operation={operation_name}, a={self.a}, b={self.b})"

@@ -62,7 +62,7 @@ def test_divide_by_zero():
 def test_invalid_command():
     """Test that an invalid command raises a KeyError."""
     command_handler = setup_command_handler()
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         command_handler.execute_command("invalid_command")
 
 def test_menu_command():
@@ -98,7 +98,7 @@ def test_main_repl_with_invalid_command(mock_input):
         mock_print.assert_any_call("Result: 2")  # Result of subtract(5, 3)
 
         # Check for invalid command handling
-        mock_print.assert_any_call("No such command: invalid_command. Type 'menu' for available commands.")
+        mock_print.assert_any_call("An error occurred: Unknown command: invalid_command")
         
         # Check for valid menu command
         mock_print.assert_any_call("Available commands: add, subtract, multiply, divide, display_history, load_history, save_history, menu, exit")
