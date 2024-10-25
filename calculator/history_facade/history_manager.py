@@ -23,8 +23,12 @@ class HistoryManager:
         logger.info("Saved calculation history to %s", file_path)
 
     def load_history(self, file_path: str):
-        self.history_df = pd.read_csv(file_path)
-        logger.info("Loaded calculation history from %s", file_path)
+        try:
+            self.history_df = pd.read_csv(file_path)
+            logger.info("Loaded calculation history from %s", file_path)
+        except (pd.errors.EmptyDataError, pd.errors.ParserError) as e:
+            logger.error("Failed to load history: %s", str(e))
+            raise ValueError("Invalid CSV file format or empty file") from e
 
     def display_history(self):
         if self.history_df.empty:
