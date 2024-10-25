@@ -12,7 +12,7 @@ Each test ensures that the Calculations class behaves as expected in different s
 # pylint: disable=unnecessary-dunder-call, invalid-name
 from calculator.calculations import Calculations
 from calculator.calculation import Calculation
-from calculator.operations import add
+from calculator.operations import add,  divide, multiply, subtract, sin, cos, tan, sqrt
 
 def test_get_last_calculation_empty():
     """

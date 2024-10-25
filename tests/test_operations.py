@@ -9,20 +9,23 @@ Tests:
 - Handling of division by zero scenarios.
 """
 
-from decimal import Decimal
 import pytest
+from decimal import Decimal
 from calculator.calculation import Calculation
-from calculator.operations import divide
+from calculator.operations import divide, sin
 
-
-def test_operation( operation, expected, a, b):
-    '''Testing various operations'''
-    calculation = Calculation.create( a, b, operation)
+def test_operation(a, b, operation, expected):
+    """Testing various operations"""
+    calculation = Calculation.create(a, b, operation)
     assert calculation.perform() == expected, f"{operation} operation failed"
 
-# Keeping the divide by zero test as is since it tests a specific case
+def test_unary_operation(a, operation, expected):
+    """Testing unary operations like sin, cos, etc."""
+    calculation = Calculation.create(a, None, operation)  # Assuming create handles None for unary
+    assert calculation.perform() == expected, f"{operation} operation failed"
+
 def test_divide_by_zero():
-    '''Testing the divide by zero exception'''
+    """Testing the divide by zero exception"""
     with pytest.raises(ValueError, match="Cannot divide by zero"):
-        calculation = Calculation(divide,Decimal('10'), Decimal('0') )
+        calculation = Calculation(divide, Decimal('10'), Decimal('0'))
         calculation.perform()

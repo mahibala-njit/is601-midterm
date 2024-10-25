@@ -8,6 +8,10 @@ from calculator.plugins.add import AddCommand
 from calculator.plugins.subtract import SubtractCommand
 from calculator.plugins.multiply import MultiplyCommand
 from calculator.plugins.divide import DivideCommand
+from calculator.plugins.sin import SinCommand
+from calculator.plugins.cos import CosCommand
+from calculator.plugins.tan import TanCommand
+from calculator.plugins.sqrt import SqrtCommand
 from calculator.plugins.menu import MenuCommand
 from calculator.plugins.display_history import DisplayHistoryCommand
 from calculator.plugins.save_history import SaveHistoryCommand
