@@ -1,39 +1,70 @@
-from typing import List, Optional
-from calculator.calculation import Calculation
+import pandas as pd
 import logging
+from calculator.calculation import Calculation
 
-# Set up logging for this module
 logger = logging.getLogger(__name__)
 
 class Calculations:
-    """A class to manage an in-memory history of mathematical calculations."""
-    
-    history: List[Calculation] = []
+    """A class to manage both in-memory and persistent calculation history using a Pandas DataFrame."""
+
+    # Initialize a DataFrame to store calculation history
+    _history_df = pd.DataFrame(columns=["operation", "a", "b", "result"])
 
     @classmethod
     def add_calculation(cls, calculation: Calculation):
-        """Adds a new calculation to the in-memory history."""
-        cls.history.append(calculation)
-        logger.info("Added calculation to in-memory history: %s", calculation)
+        """Adds a new calculation to the in-memory history and logs it."""
+        # Perform the calculation to get the result
+        result = calculation.perform()
+        # Add the calculation to the DataFrame
+        new_entry = {
+            "operation": calculation.operation.__name__,
+            "a": float(calculation.a),
+            "b": float(calculation.b) if calculation.b is not None else None,
+            "result": float(result)
+        }
+        cls._history_df = pd.concat([cls._history_df, pd.DataFrame([new_entry])], ignore_index=True)
+        logger.info("Added calculation to in-memory history: %s", new_entry)
 
     @classmethod
-    def get_last_calculation(cls) -> Optional[Calculation]:
-        """Retrieves the latest calculation from in-memory history. Returns None if there's no history."""
-        if cls.history:
-            last_calculation = cls.history[-1]
-            logger.info("Retrieved last calculation: %s", last_calculation)
-            return last_calculation
-        logger.warning("No calculations in history to retrieve.")
-        return None
+    def get_last_calculation(cls):
+        """Retrieves the most recent calculation from the in-memory history."""
+        if cls._history_df.empty:
+            logger.warning("No calculations in history.")
+            return None
+        last_entry = cls._history_df.iloc[-1]
+        logger.info("Retrieved last calculation: %s", last_entry.to_dict())
+        return last_entry.to_dict()
 
     @classmethod
-    def get_history(cls) -> List[Calculation]:
-        """Retrieves the entire in-memory history of calculations."""
-        logger.debug("Retrieving in-memory calculation history: %s", cls.history)
-        return cls.history
+    def get_history(cls):
+        """Retrieves the entire in-memory history as a DataFrame."""
+        logger.debug("Retrieved complete in-memory history.")
+        return cls._history_df
 
     @classmethod
-    def clear_history(cls): 
+    def clear_history(cls):
         """Clears the in-memory calculation history."""
-        cls.history.clear()
+        cls._history_df = pd.DataFrame(columns=["operation", "a", "b", "result"])
         logger.info("Cleared in-memory calculation history.")
+
+    @classmethod
+    def save_history(cls, file_path: str):
+        """Saves the in-memory history to a CSV file."""
+        cls._history_df.to_csv(file_path, index=False)
+        logger.info("Saved calculation history to %s", file_path)
+
+    @classmethod
+    def load_history(cls, file_path: str):
+        """Loads history from a CSV file into the in-memory DataFrame."""
+        cls._history_df = pd.read_csv(file_path)
+        logger.info("Loaded calculation history from %s", file_path)
+
+    @classmethod
+    def display_history(cls):
+        """Displays the in-memory history."""
+        if cls._history_df.empty:
+            logger.info("No calculation history available to display.")
+            return "No history available."
+        else:
+            logger.info("Displaying calculation history.")
+            return cls._history_df
