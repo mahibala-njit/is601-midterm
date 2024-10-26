@@ -1,4 +1,5 @@
-from calculator.calculations import Calculations 
+from calculator.calculations import Calculations
+from calculator.history_facade.history_facade import HistoryFacade
 from calculator.operations import add, subtract, multiply, divide, cos, sin, tan, sqrt 
 from calculator.calculation import Calculation 
 from decimal import Decimal 
@@ -19,8 +20,9 @@ class Calculator:
         calculation = Calculation.create(a, b, operation)
         logger.info("Created calculation: %s", calculation)
 
-        Calculations.add_calculation(calculation)
-        logger.info("Added calculation to history: %s", calculation)
+        # Use HistoryFacade to add the calculation
+        HistoryFacade().add_calculation(calculation)  # Add calculation to HistoryFacade
+        logger.info("Added calculation to history via HistoryFacade: %s", calculation)
 
         result = calculation.perform()
         logger.info("Performed operation: %s with result: %s", operation, result)

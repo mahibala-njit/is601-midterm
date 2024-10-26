@@ -16,6 +16,7 @@ from calculator.plugins.sqrt import SqrtCommand
 from calculator.plugins.display_history import DisplayHistoryCommand
 from calculator.plugins.save_history import SaveHistoryCommand
 from calculator.plugins.load_history import LoadHistoryCommand
+from calculator.plugins.clear_history import ClearHistoryCommand
 from dotenv import load_dotenv
 import os
 
@@ -70,6 +71,7 @@ def main():
         "display_history": DisplayHistoryCommand,
         "save_history": SaveHistoryCommand,
         "load_history": LoadHistoryCommand,
+        "clear_history": ClearHistoryCommand
     }
 
     for command_name, command_class in command_classes.items():

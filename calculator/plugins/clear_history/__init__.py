@@ -4,14 +4,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class DisplayHistoryCommand(Command):
+class ClearHistoryCommand(Command):
     def __init__(self):
         self.history_facade = HistoryFacade()  # Create an instance of HistoryFacade
-        logger.info("Initialized DisplayHistoryCommand.")
+        logger.info("Initialized ClearHistoryCommand.")
 
     def execute(self):
-        # Use the facade instance to access the display history function
-        history = self.history_facade.display_history()  # Call the instance method
-        print("Calculation History:")
-        print(history)
-        return history
+        # Use the facade instance to clear history
+        self.history_facade.clear_history()  # Call the instance method
+        print("Calculation history cleared.")
