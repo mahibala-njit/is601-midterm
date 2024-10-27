@@ -64,7 +64,8 @@ class Calculations:
         """Displays the in-memory history."""
         if cls._history_df.empty:
             logger.info("No calculation history available to display.")
-            return "No history available."
+            # Instead of returning a string, return an empty DataFrame
+            return pd.DataFrame(columns=["operation", "a", "b", "result"])
         else:
             logger.info("Displaying calculation history.")
             return cls._history_df
