@@ -8,7 +8,7 @@ class Calculations:
     """A class to manage both in-memory and persistent calculation history using a Pandas DataFrame."""
 
     # Initialize a DataFrame to store calculation history
-    _history_df = pd.DataFrame(columns=["operation", "a", "b", "result"])
+    _history_df = pd.DataFrame(columns=["operation", "operand1", "operand2", "result"])
 
     @classmethod
     def add_calculation(cls, calculation: Calculation):
@@ -18,11 +18,20 @@ class Calculations:
         # Add the calculation to the DataFrame
         new_entry = {
             "operation": calculation.operation.__name__,
-            "a": float(calculation.a),
-            "b": float(calculation.b) if calculation.b is not None else None,
+            "operand1": float(calculation.a),
+            "operand2": float(calculation.b) if calculation.b is not None else None,
             "result": float(result)
         }
-        cls._history_df = pd.concat([cls._history_df, pd.DataFrame([new_entry])], ignore_index=True)
+        # Create a DataFrame from the new entry
+        new_entry_df = pd.DataFrame([new_entry])
+        
+        # Check if history_df is empty or not
+        if cls._history_df.empty:
+            cls._history_df = new_entry_df
+        else:
+            cls._history_df = pd.concat([cls._history_df, new_entry_df], ignore_index=True)
+
+        #cls._history_df = pd.concat([cls._history_df, pd.DataFrame([new_entry])], ignore_index=True)
         logger.info("Added calculation to in-memory history: %s", new_entry)
 
     @classmethod
@@ -44,7 +53,7 @@ class Calculations:
     @classmethod
     def clear_history(cls):
         """Clears the in-memory calculation history."""
-        cls._history_df = pd.DataFrame(columns=["operation", "a", "b", "result"])
+        cls._history_df = pd.DataFrame(columns=["operation", "operand1", "operand2", "result"])
         logger.info("Cleared in-memory calculation history.")
 
     @classmethod
@@ -65,7 +74,7 @@ class Calculations:
         if cls._history_df.empty:
             logger.info("No calculation history available to display.")
             # Instead of returning a string, return an empty DataFrame
-            return pd.DataFrame(columns=["operation", "a", "b", "result"])
+            return pd.DataFrame(columns=["operation", "operand1", "operand2", "result"])
         else:
             logger.info("Displaying calculation history.")
             return cls._history_df

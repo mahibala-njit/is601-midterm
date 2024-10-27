@@ -27,7 +27,7 @@ def test_add_calculation() -> None:
     assert not history.empty, "History should not be empty after adding a calculation"
     
     # Convert the first row to a dictionary and verify it matches the expected values
-    expected = {"operation": "add", "a": 1.0, "b": 2.0, "result": 3.0}
+    expected = {"operation": "add", "operand1": 1.0, "operand2": 2.0, "result": 3.0}
     assert history.iloc[0].to_dict() == expected, f"Expected {expected}, but got {history.iloc[0].to_dict()}"
 
 def test_get_history() -> None:

@@ -33,8 +33,8 @@ def test_add_and_get_last_calculation(history_facade):
     # Check if last_calc is a dictionary
     if isinstance(last_calc, dict):
         assert last_calc["operation"] == "add"  # Check against the string "add"
-        assert last_calc["a"] == 3
-        assert last_calc["b"] == 4
+        assert last_calc["operand1"] == 3
+        assert last_calc["operand2"] == 4
         assert last_calc["result"] == 7
     else:
         assert last_calc.operation == add  # This should be the function

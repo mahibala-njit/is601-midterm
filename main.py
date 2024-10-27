@@ -2,6 +2,7 @@ import sys
 import logging
 import logging.config
 import re
+import warnings
 from decimal import Decimal, InvalidOperation
 from calculator.commands import CommandHandler
 from calculator.plugins.add import AddCommand
@@ -33,7 +34,7 @@ def setup_logging():
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[
                 logging.FileHandler(log_file),
-                logging.StreamHandler(sys.stdout)
+                #logging.StreamHandler(sys.stdout)
             ]
         )
         logger.info(f"Logging set to file: {log_file} and console (development).")
@@ -54,6 +55,9 @@ def main():
     # Setup logging and get the logger
     logger = setup_logging()
     logger.info("Starting the calculator application.")
+
+    # Suppress only FutureWarnings
+    warnings.filterwarnings("ignore", category=FutureWarning)
 
     command_handler = CommandHandler()
 
