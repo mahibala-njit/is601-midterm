@@ -10,7 +10,13 @@ class LoadHistoryCommand(Command):
         logger.info("Initialized LoadHistoryCommand.")
 
     def execute(self):
-        # Use the facade instance to load history without needing a file path
-        self.history_facade.load_history()  # Call the instance method
-        logger.info("History loaded using the configured file path.")
-        print("History loaded using the configured file path.")
+        """Executes the command to load calculation history."""
+        try:
+            # Use the facade instance to load history without needing a file path
+            self.history_facade.load_history()  # Call the instance method
+            logger.info("History loaded successfully using the configured file path.")
+            print("History loaded successfully using the configured file path.")
+        except Exception as e:
+            logger.error("Failed to load history: %s", e)
+            print("Error: Could not load history. Please check the logs for details.")
+            raise  # Optionally re-raise the exception for further handling

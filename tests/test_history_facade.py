@@ -170,7 +170,3 @@ def test_display_history_error_handling(history_facade):
     with patch.object(Calculations, 'display_history', side_effect=Exception("Display history error")):
         with pytest.raises(Exception, match="Display history error"):
             history_facade.display_history()
-
-# Run tests if this file is executed directly
-if __name__ == "__main__":
-    pytest.main()

@@ -10,7 +10,13 @@ class SaveHistoryCommand(Command):
         logger.info("Initialized SaveHistoryCommand.")
 
     def execute(self):
-        # Use the facade instance to save history without needing a file path
-        self.history_facade.save_history()
-        logger.info("History saved using the configured file path.")
-        print("History saved using the configured file path.")
+        """Executes the command to save calculation history."""
+        try:
+            # Use the facade instance to save history without needing a file path
+            self.history_facade.save_history()  # Call the instance method
+            logger.info("History saved successfully using the configured file path.")
+            print("History saved successfully using the configured file path.")
+        except Exception as e:
+            logger.error("Failed to save history: %s", e)
+            print("Error: Could not save history. Please check the logs for details.")
+            raise  # Optionally re-raise the exception for further handling

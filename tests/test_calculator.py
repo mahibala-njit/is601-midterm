@@ -57,7 +57,3 @@ def test_sqrt_negative_number():
     """Test square root of a negative number."""
     with pytest.raises(ValueError):
         Calculator.sqrt(Decimal(-4))
-
-# Run tests if this file is executed directly
-if __name__ == "__main__":
-    pytest.main()

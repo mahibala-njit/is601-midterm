@@ -65,7 +65,3 @@ def test_cos_command_log_error(caplog):
             command.execute(Decimal('2'))  # This should raise an error
             
     assert "Error calculating cos(2): Invalid input for cosine calculation." in caplog.text
-
-# Run tests if this file is executed directly
-if __name__ == "__main__":
-    pytest.main()

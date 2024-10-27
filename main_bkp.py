@@ -1,5 +1,6 @@
 import sys
 import logging
+import logging.config
 import re
 import warnings
 from decimal import Decimal, InvalidOperation
@@ -66,7 +67,6 @@ def main():
     # Suppress only FutureWarnings
     warnings.filterwarnings("ignore", category=FutureWarning)
 
-    # Instantiate command handler and register commands
     command_handler = CommandHandler()
 
     # Register commands in a loop for better maintainability
@@ -88,7 +88,8 @@ def main():
 
     for command_name, command_class in command_classes.items():
         command_handler.register_command(command_name, command_class)
-    logger.info("Registered all commands successfully.")
+
+    logger.info("Registered all commands.")
 
     print("Welcome to the Calculator REPL!")
     print("Type commands like: add(1, 2), subtract(3, 1), etc.")
@@ -108,19 +109,18 @@ def main():
             command_name = match.group(1)
             args = match.group(2)
 
-            # Process args if they exist, otherwise create an empty list
-            args = args.split(",") if args else []
-
+            if args:
+                args = args.split(",")
+            else:
+                args = []
+            
             try:
-                # Handle string-based arguments specifically for history commands
+                # Handle specific commands that may require string arguments
                 if command_name in ["save_history", "load_history"] and args:
                     command_handler.execute_command(command_name, *args)
                 else:
-                    # Convert to Decimal for numeric commands, catching invalid input
                     decimal_args = list(map(Decimal, args)) if args else []
                     command_handler.execute_command(command_name, *decimal_args)
-                logger.info(f"Command '{command_name}' executed successfully with arguments: {args}")
-
             except InvalidOperation:
                 logger.error("Invalid input. Non-numeric values entered.")
                 print("Invalid input. Please enter valid numbers.")
@@ -128,16 +128,11 @@ def main():
                 logger.error(f"Unknown command: {command_name}")
                 print(f"No such command: {command_name}. Type 'menu' for available commands.")
             except Exception as e:
-                logger.exception(f"An error occurred while processing the command '{command_name}': {e}")
+                logger.exception(f"An error occurred: {e}")
                 print(f"An error occurred: {e}")
-
         else:
-            logger.warning(f"Invalid command format entered: {user_input}")
-            print("Invalid command format. Type 'menu' to see available commands.")
+            logger.warning(f"Invalid command format: {user_input}")
+            print("Invalid command format")
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Exception as ex:
-        logging.critical("Critical error encountered during application execution: %s", str(ex))
-        print("A critical error occurred. The application will now exit.")
+    main()

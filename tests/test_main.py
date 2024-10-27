@@ -107,14 +107,14 @@ def test_menu_command():
     # List of expected substrings to check for in the output
     expected_substrings = [
         "Available Commands",
-        "add(x, y)",
-        "subtract(x, y)",
-        "multiply(x, y)",
-        "divide(x, y)",
-        "sin(x)",
-        "cos(x)",
-        "tan(x)",
-        "sqrt(x)",
+        "add(a, b)",
+        "subtract(a, b)",
+        "multiply(a, b)",
+        "divide(a, b)",
+        "sin(a)",
+        "cos(a)",
+        "tan(a)",
+        "sqrt(a)",
         "display_history()",
         "load_history()",
         "save_history()",
@@ -166,6 +166,3 @@ def test_main_repl_with_invalid_command_format(mock_input):
 
         # Check that exit was called
         mock_print.assert_any_call("Exiting the calculator.")
-
-if __name__ == "__main__":
-    pytest.main()
