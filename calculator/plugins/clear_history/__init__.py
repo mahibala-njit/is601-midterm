@@ -10,6 +10,13 @@ class ClearHistoryCommand(Command):
         logger.info("Initialized ClearHistoryCommand.")
 
     def execute(self):
-        # Use the facade instance to clear history
-        self.history_facade.clear_history()  # Call the instance method
-        print("Calculation history cleared.")
+        """Executes the command to clear calculation history."""
+        try:
+            # Use the facade instance to clear history
+            self.history_facade.clear_history()  # Call the instance method
+            logger.info("Calculation history cleared successfully.")
+            print("Calculation history cleared successfully.")
+        except Exception as e:
+            logger.error("Failed to clear calculation history: %s", e)
+            print("Error: Could not clear calculation history. Please check the logs for details.")
+            raise  # Optionally re-raise the exception for further handling

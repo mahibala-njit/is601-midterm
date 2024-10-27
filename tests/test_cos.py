@@ -1,8 +1,12 @@
+"""
+Test suite for the CosCommand functionality in the calculator.
+"""
+
 from decimal import Decimal
-from calculator.plugins.cos import CosCommand
-import pytest
 import logging
+import pytest
 from calculator import Calculator
+from calculator.plugins.cos import CosCommand  # First-party import
 
 # Set up logging for the tests
 logger = logging.getLogger(__name__)
@@ -12,9 +16,10 @@ class MockCalculator:
 
     @staticmethod
     def cos(operand):
+        """Mocked cosine function that returns fixed values for specific inputs."""
         if operand == Decimal('0'):
             return Decimal('1')
-        elif operand == Decimal('1'):
+        if operand == Decimal('1'):
             return Decimal('0.5403023058681398')  # cos(1) ~ 0.5403
         raise ValueError("Invalid input for cosine calculation.")
 
@@ -65,7 +70,3 @@ def test_cos_command_log_error(caplog):
             command.execute(Decimal('2'))  # This should raise an error
             
     assert "Error calculating cos(2): Invalid input for cosine calculation." in caplog.text
-
-# Run tests if this file is executed directly
-if __name__ == "__main__":
-    pytest.main()

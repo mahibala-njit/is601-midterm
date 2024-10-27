@@ -9,10 +9,10 @@ Tests:
 - Handling of division by zero scenarios.
 """
 
-import pytest
 from decimal import Decimal
+import pytest
 from calculator.calculation import Calculation
-from calculator.operations import divide, sin
+from calculator.operations import divide
 
 def test_operation(a, b, operation, expected):
     """Testing various operations"""

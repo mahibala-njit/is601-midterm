@@ -15,9 +15,11 @@ from calculator.operations import add, subtract, multiply, divide, sin, cos, tan
 fake = Faker()
 
 def pytest_addoption(parser):
+    """Add command line options for pytest."""
     parser.addoption("--num_records", action="store", default=5, type=int, help="Number of test records to generate")
 
 def pytest_generate_tests(metafunc):
+    """Generate dynamic test cases based on the number of records specified."""
     num_records = metafunc.config.getoption("num_records")
     
     if {"a", "b", "operation", "expected"}.issubset(metafunc.fixturenames):
@@ -29,6 +31,16 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("a, operation, expected", parameters)
 
 def generate_test_data(num_records, binary=True):
+    """Generate test data for calculator operations.
+
+    Args:
+        num_records (int): Number of test records to generate.
+        binary (bool): Whether to generate binary operation data or not.
+
+    Yields:
+        tuple: A tuple containing the operands and the corresponding operation and expected result.
+    """
+    
     operation_mappings = {
         'add': add,
         'subtract': subtract,

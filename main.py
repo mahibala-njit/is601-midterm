@@ -1,6 +1,5 @@
 import sys
 import logging
-import logging.config
 import re
 import warnings
 from decimal import Decimal, InvalidOperation
@@ -21,16 +20,20 @@ from calculator.plugins.clear_history import ClearHistoryCommand
 from dotenv import load_dotenv
 import os
 
-def setup_logging():
+def setup_logging(environment):
     """Set up logging configuration based on environment."""
-    environment = os.getenv('ENVIRONMENT', 'production')
-
     logger = logging.getLogger(__name__)
 
+    # Retrieve the log level and log file from the environment variable
+    log_level = os.getenv('LOG_LEVEL', 'INFO').upper()  # Ensure it’s uppercase
+    log_file = os.getenv('LOG_FILE', f'logs/{environment}_calculator.log')
+
+    # Set the log level based on the environment variable
+    level = getattr(logging, log_level, logging.INFO)  # Default to INFO if invalid level
+
     if environment == 'development':
-        log_file = os.path.join('logs', 'calculator.log')
         logging.basicConfig(
-            level=logging.INFO,
+            level=level,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[
                 logging.FileHandler(log_file),
@@ -40,25 +43,30 @@ def setup_logging():
         logger.info(f"Logging set to file: {log_file} and console (development).")
     else:
         logging.basicConfig(
-            level=logging.INFO,
+            level=level,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[logging.StreamHandler(sys.stdout)]
         )
         logger.info("Logging set to console (non-development).")
 
+    logger.info(f"Logging level set to : {log_level}")   
+
     return logger
 
 def main():
-    # Load environment variables from .env
-    load_dotenv()
+    # Load environment variables from .env file
+    environment = os.getenv('ENVIRONMENT', 'development')
+    env_file = f'.env.{environment}'
+    load_dotenv(env_file)
 
     # Setup logging and get the logger
-    logger = setup_logging()
+    logger = setup_logging(environment)
     logger.info("Starting the calculator application.")
 
     # Suppress only FutureWarnings
     warnings.filterwarnings("ignore", category=FutureWarning)
 
+    # Instantiate command handler and register commands
     command_handler = CommandHandler()
 
     # Register commands in a loop for better maintainability
@@ -80,8 +88,7 @@ def main():
 
     for command_name, command_class in command_classes.items():
         command_handler.register_command(command_name, command_class)
-
-    logger.info("Registered all commands.")
+    logger.info("Registered all commands successfully.")
 
     print("Welcome to the Calculator REPL!")
     print("Type commands like: add(1, 2), subtract(3, 1), etc.")
@@ -101,18 +108,19 @@ def main():
             command_name = match.group(1)
             args = match.group(2)
 
-            if args:
-                args = args.split(",")
-            else:
-                args = []
-            
+            # Process args if they exist, otherwise create an empty list
+            args = args.split(",") if args else []
+
             try:
-                # Handle specific commands that may require string arguments
+                # Handle string-based arguments specifically for history commands
                 if command_name in ["save_history", "load_history"] and args:
                     command_handler.execute_command(command_name, *args)
                 else:
+                    # Convert to Decimal for numeric commands, catching invalid input
                     decimal_args = list(map(Decimal, args)) if args else []
                     command_handler.execute_command(command_name, *decimal_args)
+                logger.info(f"Command '{command_name}' executed successfully with arguments: {args}")
+
             except InvalidOperation:
                 logger.error("Invalid input. Non-numeric values entered.")
                 print("Invalid input. Please enter valid numbers.")
@@ -120,11 +128,16 @@ def main():
                 logger.error(f"Unknown command: {command_name}")
                 print(f"No such command: {command_name}. Type 'menu' for available commands.")
             except Exception as e:
-                logger.exception(f"An error occurred: {e}")
+                logger.exception(f"An error occurred while processing the command '{command_name}': {e}")
                 print(f"An error occurred: {e}")
+
         else:
-            logger.warning(f"Invalid command format: {user_input}")
-            print("Invalid command format")
+            logger.warning(f"Invalid command format entered: {user_input}")
+            print("Invalid command format. Type 'menu' to see available commands.")
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as ex:
+        logging.critical("Critical error encountered during application execution: %s", str(ex))
+        print("A critical error occurred. The application will now exit.")

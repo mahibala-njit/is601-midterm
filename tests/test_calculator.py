@@ -1,6 +1,10 @@
-from calculator import Calculator
+"""
+Test suite for the Calculator methods.
+"""
+
 from decimal import Decimal
 import pytest
+from calculator import Calculator
 
 def test_addition():
     """Test that the addition function works."""
@@ -57,7 +61,3 @@ def test_sqrt_negative_number():
     """Test square root of a negative number."""
     with pytest.raises(ValueError):
         Calculator.sqrt(Decimal(-4))
-
-# Run tests if this file is executed directly
-if __name__ == "__main__":
-    pytest.main()

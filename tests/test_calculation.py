@@ -9,7 +9,7 @@ as well as the functionality of the Calculation class that encapsulates these op
 from decimal import Decimal
 import pytest
 from calculator.calculation import Calculation
-from calculator.operations import add,  divide, multiply, subtract, sin, cos, tan, sqrt
+from calculator.operations import add,  divide
 
 def test_calculation_operations(operation, expected, a, b):
     """
