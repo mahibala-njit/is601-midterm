@@ -10,27 +10,34 @@ class Calculation:
     """A class to represent a mathematical calculation that encapsulates two operands 
     and an operation (such as addition, subtraction, etc.)"""
 
-    def __init__(self, a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]):
-        """Initializes a Calculation object with two operands and an operation"""
-        self.a = a
-        self.b = b
+    def __init__(self, operation: Callable, a: Decimal, b: Decimal = None):
         self.operation = operation
-        logger.debug("Initialized Calculation: a=%s, b=%s, operation=%s", a, b, operation.__name__)
+        self.a = a
+        self.b = b  # optional for unary operations
+        logger.debug("Initialized Calculation: a=%s, b=%s, operation=%s", a, b, operation)
 
     @staticmethod
-    def create(a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]):
+    def create(a: Decimal, b: Decimal, operation: Callable) -> 'Calculation':
         """Static method to create a new Calculation instance"""
-        calculation = Calculation(a, b, operation)
+        # Adjust the operation to ensure it is callable and not a Decimal
+        calculation = Calculation(operation, a, b)
         logger.info("Created Calculation: %s", calculation)
         return calculation
 
     def perform(self) -> Decimal:
-        """Executes the operation stored in this Calculation object on the two operands"""
-        logger.debug("Performing Calculation: %s", self)
-        result = self.operation(self.a, self.b)
+        if self.b is None:
+            result = self.operation(self.a)  # Unary
+        else:
+            result = self.operation(self.a, self.b)  # Binary
         logger.info("Performed %s: %s = %s", self.operation.__name__, self, result)
         return result
 
+    #def __repr__(self):
+    #    """Returns a string representation of the Calculation object"""
+    #    logger.info(f"Calculation({self.a}, {self.b}, {self.operation})")
+    #    return f"Calculation({self.a}, {self.b}, {self.operation})"
+
     def __repr__(self):
         """Returns a string representation of the Calculation object"""
-        return f"Calculation({self.a}, {self.b}, {self.operation.__name__})"
+        operation_name = self.operation.__name__ if callable(self.operation) else str(self.operation)
+        return f"Calculation(operation={operation_name}, a={self.a}, b={self.b})"
