@@ -1,8 +1,12 @@
+"""
+Test suite for the SinCommand functionality in the calculator.
+"""
+
 from decimal import Decimal
-from calculator.plugins.sin import SinCommand
-import pytest
 import logging
+import pytest
 from calculator import Calculator
+from calculator.plugins.sin import SinCommand  # First-party import
 
 # Set up logging for the tests
 logger = logging.getLogger(__name__)
@@ -12,9 +16,10 @@ class MockCalculator:
 
     @staticmethod
     def sin(operand):
+        """Mocked sine function that returns fixed values for specific inputs."""
         if operand == Decimal('0'):
             return Decimal('0')
-        elif operand == Decimal('1'):
+        if operand == Decimal('1'):
             return Decimal('0.8414709848078965')  # sin(1) ~ 0.8415
         raise ValueError("Invalid input for sine calculation.")
 

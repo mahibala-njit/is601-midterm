@@ -1,6 +1,19 @@
-# test_calculations.py
+"""
+Test suite for calculator operations in the Calculations module.
 
-import pytest
+This module contains unit tests for the following functionalities:
+- Adding a calculation to in-memory history.
+- Retrieving calculation history.
+- Clearing the calculation history.
+
+The tests utilize the `Calculation` class to create calculation objects and the `Calculations` class to manage the history of these calculations. Each test ensures that the operations correctly manipulate the in-memory history and validates that the expected results match the actual outputs.
+
+Tests included:
+- `test_add_calculation`: Validates that a calculation is correctly added to the history and that the history reflects the correct operation and operands.
+- `test_get_history`: Ensures that the retrieval of history returns the correct data for the last added calculation.
+- `test_clear_history`: Confirms that the history can be cleared and that no records remain afterward.
+"""
+
 from calculator.calculation import Calculation
 from calculator.calculations import Calculations
 

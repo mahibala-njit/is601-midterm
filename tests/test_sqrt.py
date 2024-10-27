@@ -1,8 +1,12 @@
+"""
+Test suite for the SqrtCommand functionality in the calculator.
+"""
+
 from decimal import Decimal
-from calculator.plugins.sqrt import SqrtCommand
-import pytest
 import logging
-from calculator import Calculator
+import pytest
+from calculator import Calculator  # First-party import
+from calculator.plugins.sqrt import SqrtCommand  # First-party import
 
 # Set up logging for the tests
 logger = logging.getLogger(__name__)
@@ -12,11 +16,12 @@ class MockCalculator:
 
     @staticmethod
     def sqrt(operand):
+        """Mocked square root function that returns fixed values for specific inputs."""
         if operand == Decimal('0'):
             return Decimal('0')
-        elif operand == Decimal('4'):
+        if operand == Decimal('4'):
             return Decimal('2')
-        elif operand == Decimal('9'):
+        if operand == Decimal('9'):
             return Decimal('3')
         raise ValueError("Invalid input for square root calculation.")
 

@@ -1,6 +1,10 @@
-from calculator import Calculator
+"""
+Test suite for the Calculator methods.
+"""
+
 from decimal import Decimal
 import pytest
+from calculator import Calculator
 
 def test_addition():
     """Test that the addition function works."""

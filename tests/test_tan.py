@@ -1,8 +1,12 @@
+"""
+Test suite for the TanCommand functionality in the calculator.
+"""
+
 from decimal import Decimal
-from calculator.plugins.tan import TanCommand
-import pytest
 import logging
+import pytest
 from calculator import Calculator
+from calculator.plugins.tan import TanCommand  # First-party import
 
 # Set up logging for the tests
 logger = logging.getLogger(__name__)
@@ -12,9 +16,10 @@ class MockCalculator:
 
     @staticmethod
     def tan(operand):
+        """Mocked tangent function that returns fixed values for specific inputs."""
         if operand == Decimal('0'):
             return Decimal('0')
-        elif operand == Decimal('1'):
+        if operand == Decimal('1'):
             return Decimal('1.5574077246549023')  # tan(1) ~ 1.5574
         raise ValueError("Invalid input for tangent calculation.")
 

@@ -1,10 +1,8 @@
-"""
-Test suite for the DisplayHistoryCommand.
+"""Test suite for the DisplayHistoryCommand.
 """
 
 import logging
 from unittest.mock import patch
-import pytest
 from calculator.plugins.display_history import DisplayHistoryCommand
 
 # Set up logging for the tests
@@ -21,8 +19,7 @@ def test_display_history_command_success(caplog):
         instance.display_history.return_value = mock_history  # Mock the return value
 
         with caplog.at_level(logging.INFO):
-            result = command.execute()  # Execute the command
+            command.execute()  # Execute the command
 
     # Assertions
-    #assert result == mock_history  # Check that the result matches the mock history
     assert "Successfully retrieved history" in caplog.text  # Check the log message
