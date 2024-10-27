@@ -5,9 +5,6 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 
-# Load environment variables from .env file
-load_dotenv()
-
 logger = logging.getLogger(__name__)
 
 class HistoryFacade:

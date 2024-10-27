@@ -5,12 +5,12 @@ import logging
 logger = logging.getLogger(__name__)
 
 class LoadHistoryCommand(Command):
-    def __init__(self, file_path: str):
-        self.file_path = file_path
+    def __init__(self):
         self.history_facade = HistoryFacade()  # Create an instance of HistoryFacade
-        logger.info("Initialized LoadHistoryCommand with file path: %s", file_path)
+        logger.info("Initialized LoadHistoryCommand.")
 
     def execute(self):
-        # Use the facade instance to load history
-        self.history_facade.load_history(self.file_path)  # Call the instance method
-        print(f"History loaded from {self.file_path}")
+        # Use the facade instance to load history without needing a file path
+        self.history_facade.load_history()  # Call the instance method
+        logger.info("History loaded using the configured file path.")
+        print("History loaded using the configured file path.")
