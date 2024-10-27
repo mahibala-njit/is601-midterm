@@ -21,16 +21,20 @@ from calculator.plugins.clear_history import ClearHistoryCommand
 from dotenv import load_dotenv
 import os
 
-def setup_logging():
+def setup_logging(environment):
     """Set up logging configuration based on environment."""
-    environment = os.getenv('ENVIRONMENT', 'production')
-
     logger = logging.getLogger(__name__)
 
+    # Retrieve the log level and log file from the environment variable
+    log_level = os.getenv('LOG_LEVEL', 'INFO').upper()  # Ensure it’s uppercase
+    log_file = os.getenv('LOG_FILE', f'logs/{environment}_calculator.log')
+
+    # Set the log level based on the environment variable
+    level = getattr(logging, log_level, logging.INFO)  # Default to INFO if invalid level
+
     if environment == 'development':
-        log_file = os.path.join('logs', 'calculator.log')
         logging.basicConfig(
-            level=logging.INFO,
+            level=level,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[
                 logging.FileHandler(log_file),
@@ -40,20 +44,24 @@ def setup_logging():
         logger.info(f"Logging set to file: {log_file} and console (development).")
     else:
         logging.basicConfig(
-            level=logging.INFO,
+            level=level,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[logging.StreamHandler(sys.stdout)]
         )
         logger.info("Logging set to console (non-development).")
 
+    logger.info(f"Logging level set to : {log_level}")   
+
     return logger
 
 def main():
-    # Load environment variables from .env
-    load_dotenv()
+    # Load environment variables from .env file
+    environment = os.getenv('ENVIRONMENT', 'development')
+    env_file = f'.env.{environment}'
+    load_dotenv(env_file)
 
     # Setup logging and get the logger
-    logger = setup_logging()
+    logger = setup_logging(environment)
     logger.info("Starting the calculator application.")
 
     # Suppress only FutureWarnings
