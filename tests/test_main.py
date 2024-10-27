@@ -69,12 +69,6 @@ def test_invalid_command():
     with pytest.raises(ValueError):
         command_handler.execute_command("invalid_command")
 
-def test_menu_command():
-    """Test that the menu command executes successfully."""
-    command_handler = setup_command_handler()
-    result = command_handler.execute_command("menu")
-    assert result is not None  # Check the expected return value of the menu
-
 @patch('builtins.input', side_effect=["add(1, 2)", "subtract(5, 3)", "menu", "exit"])
 def test_main_repl(mock_input):
     """Test the main REPL for valid commands."""
@@ -84,7 +78,6 @@ def test_main_repl(mock_input):
         mock_print.assert_any_call("Type commands like: add(1, 2), subtract(3, 1), etc.")
         mock_print.assert_any_call("Result: 2")  # Result of subtract(5, 3)
         mock_print.assert_any_call("Result: 3")  # Result of add(1, 2)
-        mock_print.assert_any_call("Available commands: add, subtract, multiply, divide, display_history, load_history, save_history, menu, exit")
 
 @patch('builtins.input', side_effect=[
     "add(1, 2)",
@@ -103,21 +96,36 @@ def test_main_repl_with_invalid_command(mock_input):
 
         # Check for invalid command handling
         mock_print.assert_any_call("An error occurred: Unknown command: invalid_command")
-        
-        # Check for valid menu command
-        mock_print.assert_any_call("Available commands: add, subtract, multiply, divide, display_history, load_history, save_history, menu, exit")
 
-@patch('builtins.input', side_effect=["menu", "exit"])
-def test_main_repl_with_menu_command(mock_input):
-    """Test the main REPL with the menu command."""
-    with patch('builtins.print') as mock_print:
-        main()  # Call the main function directly here
+def test_menu_command():
+    """Test that the menu command executes successfully and contains the correct output."""
+    command_handler = setup_command_handler()
+    
+    result = command_handler.execute_command("menu")
+    assert result is not None  # Ensure the command executed successfully
+    
+    # List of expected substrings to check for in the output
+    expected_substrings = [
+        "Available Commands",
+        "add(x, y)",
+        "subtract(x, y)",
+        "multiply(x, y)",
+        "divide(x, y)",
+        "sin(x)",
+        "cos(x)",
+        "tan(x)",
+        "sqrt(x)",
+        "display_history()",
+        "load_history()",
+        "save_history()",
+        "menu",
+        "exit"
+    ]
+    
+    # Check if each expected substring is in the result
+    for substring in expected_substrings:
+        assert substring in result, f"Expected substring '{substring}' not found in menu output."
 
-        # Check that the menu command was called
-        mock_print.assert_any_call("Available commands: add, subtract, multiply, divide, display_history, load_history, save_history, menu, exit")
-        
-        # Check that exit was called
-        mock_print.assert_any_call("Exiting the calculator.")
 
 @patch('builtins.input', side_effect=["divide(1, 0)", "exit"])
 def test_main_repl_with_divide_by_zero(mock_input):
