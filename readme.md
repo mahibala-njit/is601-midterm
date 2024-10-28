@@ -2,7 +2,9 @@
 
 # Video Demonstration
 
-A video demonstration of the application, showcasing key functionalities like adding, subtracting, saving, loading, and displaying history, can be found ![here!](https://drive.google.com/file/d/1n5qLa6t_CGEfZqy49vfxVhqcJL_7nKMc/view?usp=sharing)
+A video demonstration of the application, showcasing key functionalities like adding, subtracting, saving, loading, and displaying history, can be 
+found 
+![Watch the video](https://drive.google.com/file/d/1n5qLa6t_CGEfZqy49vfxVhqcJL_7nKMc/view?usp=sharing)
 
 # Project Overview
 
