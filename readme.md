@@ -88,12 +88,44 @@ python main.py
 
 # Design Patterns
 
+1. Command Pattern
+Purpose: The Command pattern encapsulates each calculator operation (like addition, subtraction, loading history) as an individual object, allowing flexible command execution.
+Implementation: Each calculator operation (e.g., AddCommand, SubtractCommand, LoadHistoryCommand) inherits from the Command abstract base class in command_handler.py. Each command has an execute method, ensuring consistent execution across commands. This approach helps simplify REPL handling and enables seamless addition of new commands without modifying core functionality.
+![Reference](https://github.com/mahibala-njit/is601-midterm/blob/main/calculator/commands/__init__.py)
+
+2. Plugin Pattern
+Purpose: The Plugin pattern enables a modular and extensible architecture where each command can be dynamically loaded. This is particularly beneficial for managing calculator functions that might be expanded later (e.g., adding trigonometric functions).
+Implementation: In the commands folder, each operation (add, subtract, multiply, etc.) is implemented in a separate subfolder with a __init__.py file containing the command logic. This structure allows each command to be dynamically loaded into the REPL by the main application, without requiring changes to existing code.
+![Reference](https://github.com/mahibala-njit/is601-midterm/blob/main/calculator/plugins/__init__.py)
+![Sample Plugin Reference](https://github.com/mahibala-njit/is601-midterm/blob/main/calculator/plugins/add/__init__.py)
+
+3. Facade Pattern
+Purpose: The Facade pattern simplifies interactions with complex history management functions by providing a single interface. In this project, it abstracts operations for loading, saving, displaying, and clearing history, making the codebase more maintainable and user-friendly.
+Implementation: The HistoryFacade class provides methods like load_history, save_history, display_history, and clear_history that interact with the underlying Pandas data structure without exposing its complexities to the rest of the application. This pattern is particularly useful in handling multiple history-related functionalities with a simplified interface.
+![Reference](https://github.com/mahibala-njit/is601-midterm/blob/296e7d956f0139751fcbd1490a54932e913c5195/calculator/history_facade/history_facade.py#L10)
+
+4. Singleton Pattern
+Purpose: The Singleton pattern ensures that only one instance of HistoryFacade exists, controlling access to history data and avoiding redundancy in history management.
+Implementation: In HistoryFacade, the Singleton pattern is implemented by defining a class-level instance and overriding the constructor to check if an instance already exists. If not, it creates one; otherwise, it returns the existing instance. This approach maintains a single history management instance, promoting resource efficiency.
+![Reference](https://github.com/mahibala-njit/is601-midterm/blob/296e7d956f0139751fcbd1490a54932e913c5195/calculator/history_facade/history_facade.py#L13)
+
+
 # Environment Variables
 
 Environment variables are utilized for dynamic configuration, allowing for flexible log settings and file paths. Configurations are managed through .env files:
 - LOG_LEVEL: Sets the level of logging (e.g., DEBUG, INFO).
 - LOG_FILE: Specifies the file name and location for storing logs.
 - FILE_PATH: Location for storing calculation history data.
+
+![alt text](image-8.png)
+
+![alt text](image-9.png)
+
+Organized in such a way that that when it runs locally the environment variable would be set to 'development'. Based on the branch it gets merged to, the github actions has a step which assigns the 'ENVIRONMENT'. If it gets merged to main branch, the ENVIRONMENT would be set to 'production' and automatically the corresponding .env would be loaded during application runtime. See below YAML file.
+
+![Link to github actions yaml configuration](https://github.com/mahibala-njit/is601-midterm/blob/296e7d956f0139751fcbd1490a54932e913c5195/.github/workflows/python-app.yml#L33)
+
+![Link to environment variables loading in main.py](https://github.com/mahibala-njit/is601-midterm/blob/296e7d956f0139751fcbd1490a54932e913c5195/main.py#L57)
 
 # Logging
 
@@ -102,6 +134,12 @@ Logging is critical for tracking application events and errors. The setup in mai
 - Logging settings are dynamically controlled via .env variables.
 - Logs track successful command executions and potential errors.
 
+[Link to setup logging in main.py](https://github.com/mahibala-njit/is601-midterm/blob/296e7d956f0139751fcbd1490a54932e913c5195/main.py#L23)
+
+Sample log output:
+
+![alt text](image-10.png)
+
 # Exception Handling
 
 This project employs both Look Before You Leap (LBYL) and Easier to Ask for Forgiveness than Permission (EAFP) approaches to error handling:
@@ -109,8 +147,8 @@ This project employs both Look Before You Leap (LBYL) and Easier to Ask for Forg
 - EAFP: Used where direct action is more efficient, handling exceptions as they arise.
 
 Examples:
-- LBYL: HistoryFacade checks if the history file exists before loading data.
-- EAFP: Direct file access in save/load commands with try/except blocks for error handling.
+- LBYL: HistoryFacade checks if the history file exists before loading data. [LBYL Reference](https://github.com/mahibala-njit/is601-midterm/blob/296e7d956f0139751fcbd1490a54932e913c5195/calculator/history_facade/history_facade.py#L58)
+- EAFP: Direct file access in save/load commands with try/except blocks for error handling. [EAFP Reference](https://github.com/mahibala-njit/is601-midterm/blob/296e7d956f0139751fcbd1490a54932e913c5195/calculator/history_facade/history_facade.py#L62)
 
 # Tests and CI/CD 
 This project includes extensive unit tests for each feature and operation. Testing is done using the pytest framework, and code linting is handled by pylint to ensure code quality.
@@ -125,7 +163,7 @@ pytest --pylint --cov --cov-report=xml --cov-report=term-missing
 ```
 ## Testing results:
 1. pytest --num_records=10
-![alt text](images/image-1.png)
+![alt text](image-1.png)
 
 2. pytest --pylint --cov
 ![alt text](image-2.png)
