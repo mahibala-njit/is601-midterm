@@ -76,14 +76,12 @@ pip3 install -r requirements.txt
 python main.py
 ```
 
-### Logs show up in the console as well as in app.log locally
-
 1. REPL Interface
 ![alt text](images/image-11.png)
 
-2. app.log
+2. development_calculator.log
 
-![alt text](images/image.png)
+![alt text](images/image-12.png)
 
 # Project Structure
 
@@ -145,7 +143,7 @@ Logging is critical for tracking application events and errors. The setup in mai
 
 Sample log output:
 
-![alt text](images/image-10.png)
+![alt text](images/image-12.png)
 
 # Exception Handling
 
