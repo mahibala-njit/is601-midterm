@@ -2,7 +2,7 @@
 
 # Video Demonstration
 
-A video demonstration of the application, showcasing key functionalities like adding, subtracting, saving, loading, and displaying history, can be found here.
+A video demonstration of the application, showcasing key functionalities like adding, subtracting, saving, loading, and displaying history, can be found ![here!](https://drive.google.com/file/d/1n5qLa6t_CGEfZqy49vfxVhqcJL_7nKMc/view?usp=sharing)
 
 # Project Overview
 
@@ -179,6 +179,9 @@ pytest --pylint --cov --cov-report=xml --cov-report=term-missing
 ## Github actions Test
 
 1. On pull request to main branch, github actions got triggered and is in progress
+
+Latest Pull request evidence:
+![Github actions run details](https://github.com/mahibala-njit/is601-midterm/pull/4/checks)
 
 ![alt text](images/image-4.png)
 
