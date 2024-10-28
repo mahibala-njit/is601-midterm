@@ -125,7 +125,7 @@ pytest --pylint --cov --cov-report=xml --cov-report=term-missing
 ```
 ## Testing results:
 1. pytest --num_records=10
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 
 2. pytest --pylint --cov
 ![alt text](image-2.png)
